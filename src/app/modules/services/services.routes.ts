@@ -20,6 +20,8 @@ router.get("/", ServiceControllers.getAllFromDB);
 
 // }
 
+router.patch("/:id", ServiceControllers.updateOneInDB);
+
 router.post(
   "/create-service",
   validateRequest(ServicesValidation.create),

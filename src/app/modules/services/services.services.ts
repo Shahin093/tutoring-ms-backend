@@ -91,7 +91,21 @@ const getAllFromDB = async (
   };
 };
 
+const updateOneInDB = async (
+  id: string,
+  payload: Partial<Service>
+): Promise<Service> => {
+  const result = await prisma.service.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+  return result;
+};
+
 export const ServiceServices = {
   insertIntoDB,
   getAllFromDB,
+  updateOneInDB,
 };
