@@ -4,8 +4,13 @@ import ApiError from "../../../errors/ApiError";
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import config from "../../../config";
+import { isValidEmail } from "../auth/auth.utils";
 
 const insertInToDB = async (data: User): Promise<User> => {
+  if (!isValidEmail(data?.email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email is not Valid!");
+  }
+
   const isExistEmail = await prisma.user.findUnique({
     where: {
       email: data?.email,

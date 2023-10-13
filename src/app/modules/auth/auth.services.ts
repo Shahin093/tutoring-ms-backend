@@ -3,6 +3,7 @@ import ApiError from "../../../errors/ApiError";
 import prisma from "../../../shared/prisma";
 import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import config from "../../../config";
+import { isValidEmail } from "./auth.utils";
 
 type ILoginUser = {
   email: string;
@@ -13,9 +14,17 @@ type ILoginUserResponse = {
   accessToken: string;
   refreshToken?: string;
 };
+
+// {
+//   "email":"sishahin093@gmail.com",
+//   "password":"103511"
+// }
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
-  const { email, password } = payload;
-  console.log(email);
+  const { email } = payload;
+
+  if (!isValidEmail(email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email is not Valid!");
+  }
 
   //  access to our instance methods
   const isUserExists = await prisma.user.findFirst({
