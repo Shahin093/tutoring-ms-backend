@@ -19,4 +19,52 @@ model User {
   contactNo String
   address String
   profileImg String
+
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+
+
+  @@map("users")
+}
+
+model Service {
+  id String @id @default(uuid())
+  serviceName String 
+  serviceCode Int
+  service_image String
+  category ServiceCategory
+  schedule ServiceSchedule
+  price Int
+  description String
+  per_course_students Int? @default(0)
+  location String
+  serviceAuthor String
+  acceptable_students Int? @default(20)
+  status UserEnrolledServiceStatus
+
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+
+
+  @@map("services")
+}
+
+
+enum UserEnrolledServiceStatus {
+  ONGOING
+  COMPLETED
+  WITHDRAWN
+}
+
+enum ServiceSchedule {
+  MORNING_2_4 
+  AFTERNOON_4_6 
+  EVENING_6_8 
+}
+
+enum ServiceCategory {
+  MONTHLY
+  YOURLY
+  THREE_MONTH
+  SIX_MONTH
 }
