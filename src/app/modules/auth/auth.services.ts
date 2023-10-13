@@ -15,6 +15,7 @@ type ILoginUserResponse = {
 };
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password } = payload;
+  console.log(email);
 
   //  access to our instance methods
   const isUserExists = await prisma.user.findFirst({

@@ -23,6 +23,8 @@ model User {
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
 
+  user Booking[]
+
 
   @@map("users")
 }
@@ -45,9 +47,35 @@ model Service {
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
 
+  service Booking[]
+
 
   @@map("services")
 }
+
+model Booking {
+  id String @id @default(uuid())
+
+
+  userId          String
+  user            User           @relation(fields: [userId], references: [id])
+
+  serviceid       String
+  service         Service        @relation(fields: [serviceid], references: [id])
+
+  category        ServiceCategory
+  schedule        ServiceSchedule
+  status          BookingStatus  @default(PENDING)
+  student_type    StudentType    @default(NORMAL_STUDENT)
+
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@map("bookings")
+}
+
+
 
 
 enum UserEnrolledServiceStatus {
@@ -67,4 +95,16 @@ enum ServiceCategory {
   YOURLY
   THREE_MONTH
   SIX_MONTH
+}
+
+enum BookingStatus {
+  PENDING
+  COMPLETED
+}
+
+enum StudentType {
+  NORMAL_STUDENT
+  SHOOLE
+  COLLEGE
+  UNIVERCITY
 }
