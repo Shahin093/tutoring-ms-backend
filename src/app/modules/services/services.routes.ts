@@ -17,10 +17,13 @@ router.get("/", ServiceControllers.getAllFromDB);
 //     "serviceAuthor":"MD Shidul",
 //     "status":  "ONGOING",
 //     "service_image":"shahin.png"
-
 // }
 
 router.patch("/:id", ServiceControllers.updateOneInDB);
+
+router.get("/:id", ServiceControllers.getByIdFromDB);
+
+router.delete("/:id", ServiceControllers.deleteByIdFromDB);
 
 router.post(
   "/create-service",

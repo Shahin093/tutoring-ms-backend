@@ -104,8 +104,28 @@ const updateOneInDB = async (
   return result;
 };
 
+const getByIdFromDB = async (id: string): Promise<Service | null> => {
+  const result = await prisma.service.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
+const deleteByIdFromDB = async (id: string): Promise<Service> => {
+  const result = await prisma.service.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
 export const ServiceServices = {
   insertIntoDB,
   getAllFromDB,
   updateOneInDB,
+  getByIdFromDB,
+  deleteByIdFromDB,
 };

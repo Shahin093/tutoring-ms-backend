@@ -30,18 +30,42 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateOneInDB = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const result = await ServiceServices.updateOneInDB(id, req.body);
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'service updated successfully',
-        data: result
-    });
+  const { id } = req.params;
+  const result = await ServiceServices.updateOneInDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "service updated successfully",
+    data: result,
+  });
 });
 
+const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ServiceServices.getByIdFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Service fetched successfully",
+    data: result,
+  });
+});
+
+const deleteByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ServiceServices.deleteByIdFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Service delete successfully",
+    data: result,
+  });
+});
 
 export const ServiceControllers = {
   insertIntoDB,
-  getAllFromDB,updateOneInDB
+  getAllFromDB,
+  updateOneInDB,
+  getByIdFromDB,
+  deleteByIdFromDB,
 };
