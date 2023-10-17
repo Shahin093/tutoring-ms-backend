@@ -1,15 +1,11 @@
 export type IBooking = {};
 
-export type IServiceFilterRequest = {
+export type IBookingFilterRequest = {
   searchTerm?: string | undefined;
-  serviceName?: string | undefined;
-  serviceCode?: number | undefined;
   category?: string | undefined;
-  price?: string | undefined;
   schedule?: string | undefined;
   status?: string | undefined;
-  location?: string | undefined;
-  serviceFeatures?: string | undefined;
+  student_type?: string | undefined;
 };
 
 export type IStudentMyCoursesRequest = {

@@ -123,6 +123,7 @@ enum ServiceCategory {
 enum BookingStatus {
   PENDING
   COMPLETED
+  
 }
 
 enum StudentType {

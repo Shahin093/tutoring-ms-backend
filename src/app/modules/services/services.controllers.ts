@@ -43,10 +43,11 @@ const updateOneInDB = catchAsync(async (req: Request, res: Response) => {
 const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await ServiceServices.getByIdFromDB(id);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Service fetched successfully",
+    message: "Service get successfully",
     data: result,
   });
 });

@@ -3,46 +3,71 @@ import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
 import { UsersService } from "./users.services";
 import { Request, Response } from "express";
-import { FileUploadHelper } from "../../../helpers/FileUploadHelper";
-import { IUploadFile } from "../../../interfaces/file";
-import ApiError from "../../../errors/ApiError";
+import pick from "../../../shared/pick";
+import { userFilterableFields } from "./users.constrans";
 
 const insertInToDB = catchAsync(async (req: Request, res: Response) => {
-  if (req.body.data) {
-    try {
-      const userData = JSON.parse(req.body.data); // Parse the JSON data
-      const file = req.file as IUploadFile;
+  const result = await UsersService.insertInToDB(req.body);
 
-      const uploadedProfileImage = await FileUploadHelper.uploadToCloudinary(
-        file
-      );
-
-      if (uploadedProfileImage) {
-        const modifiedUserData = {
-          ...userData,
-          profileImg: uploadedProfileImage.secure_url,
-        };
-        console.log("modifiedUserData: ", modifiedUserData);
-        const result = await UsersService.insertInToDB(modifiedUserData);
-
-        sendResponse(res, {
-          statusCode: httpStatus.OK,
-          success: true,
-          message: "User created successfully!",
-          data: result,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid JSON data.");
-    }
-  } else {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "Missing data field in the request."
-    );
-  }
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User created successfully!",
+    data: result,
+  });
 });
+
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
+  const result = await UsersService.getAllFromDB(filters, options);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users Fetch successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
+const updateOneInDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UsersService.updateOneInDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User updated successfully",
+    data: result,
+  });
+});
+
+const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UsersService.getByIdFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User get successfully",
+    data: result,
+  });
+});
+
+const deleteByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UsersService.deleteByIdFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User delete successfully",
+    data: result,
+  });
+});
+
 export const UsersController = {
   insertInToDB,
+  getAllFromDB,
+  updateOneInDB,
+  getByIdFromDB,
+  deleteByIdFromDB,
 };
