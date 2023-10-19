@@ -23,4 +23,4 @@ router.post(
   AdminsController.insertInToDB
 );
 
-export const UserRoutes = router;
+export const AdminRoutes = router;
