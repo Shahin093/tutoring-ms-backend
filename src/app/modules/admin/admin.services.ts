@@ -1,22 +1,22 @@
 import httpStatus from "http-status";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiError";
-import { User } from "@prisma/client";
+import { Admin, User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import config from "../../../config";
 import { isValidEmail } from "../auth/auth.utils";
-import { IUserFilterRequest } from "./users.interfaces";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
-import { userSearchableFields } from "./users.constrans";
+import { IAdminFilterRequest } from "./admin.interface";
+import { adminSearchableFields } from "./admin.constants";
 
-const insertInToDB = async (data: User): Promise<User> => {
+const insertInToDB = async (data: Admin): Promise<Admin> => {
   if (!isValidEmail(data?.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email is not Valid!");
   }
 
-  const isExistEmail = await prisma.user.findUnique({
+  const isExistEmail = await prisma.admin.findUnique({
     where: {
       email: data?.email,
     },
@@ -33,16 +33,16 @@ const insertInToDB = async (data: User): Promise<User> => {
 
   data.password = byPassword;
 
-  const result = await prisma.user.create({
+  const result = await prisma.admin.create({
     data,
   });
   return result;
 };
 
 const getAllFromDB = async (
-  filters: IUserFilterRequest,
+  filters: IAdminFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<User[]>> => {
+): Promise<IGenericResponse<Admin[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
@@ -50,7 +50,7 @@ const getAllFromDB = async (
 
   if (!!searchTerm) {
     andConditions.push({
-      OR: userSearchableFields.map((field) => ({
+      OR: adminSearchableFields.map((field) => ({
         [field]: {
           contains: searchTerm,
           mode: "insensitive",
@@ -58,9 +58,6 @@ const getAllFromDB = async (
       })),
     });
   }
-
-  // Now, andConditions may contain a search condition
-  console.log(andConditions);
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
@@ -75,11 +72,7 @@ const getAllFromDB = async (
   const whereConditions: any =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.user.findMany({
-    include: {
-      user: true,
-      reviews: true,
-    },
+  const result = await prisma.admin.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -90,7 +83,7 @@ const getAllFromDB = async (
             createdAt: "desc",
           },
   });
-  const total = await prisma.user.count({
+  const total = await prisma.admin.count({
     where: whereConditions,
   });
 
@@ -107,9 +100,9 @@ const getAllFromDB = async (
 
 const updateOneInDB = async (
   id: string,
-  payload: Partial<User>
-): Promise<User> => {
-  const result = await prisma.user.update({
+  payload: Partial<Admin>
+): Promise<Admin> => {
+  const result = await prisma.admin.update({
     where: {
       id,
     },
@@ -118,9 +111,9 @@ const updateOneInDB = async (
   return result;
 };
 
-const getByIdFromDB = async (id: string): Promise<User | null> => {
+const getByIdFromDB = async (id: string): Promise<Admin | null> => {
   try {
-    const result = await prisma.user.findUnique({
+    const result = await prisma.admin.findUnique({
       where: {
         id,
       },
@@ -134,7 +127,7 @@ const getByIdFromDB = async (id: string): Promise<User | null> => {
 };
 
 const deleteByIdFromDB = async (id: string): Promise<User> => {
-  const result = await prisma.user.delete({
+  const result = await prisma.admin.delete({
     where: {
       id,
     },
@@ -142,7 +135,7 @@ const deleteByIdFromDB = async (id: string): Promise<User> => {
   return result;
 };
 
-export const UsersService = {
+export const AdminsService = {
   insertInToDB,
   getAllFromDB,
   getByIdFromDB,

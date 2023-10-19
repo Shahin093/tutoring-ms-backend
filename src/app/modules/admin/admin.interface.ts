@@ -1,6 +1,6 @@
 export type IBooking = {};
 
-export type IUserFilterRequest = {
+export type IAdminFilterRequest = {
   searchTerm?: string | undefined;
   name?: string | undefined;
   email?: string | undefined;

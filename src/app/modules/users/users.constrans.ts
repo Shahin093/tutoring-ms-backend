@@ -1,16 +1,18 @@
 export const userFilterableFields: string[] = [
   "searchTerm",
-  "location",
+  "role",
   "name",
   "email",
+  "contactNo",
+  "address",
 ];
 
 export const userSearchableFields: string[] = [
-  // ,
-  "category",
-  "schedule",
-  "status",
-  "student_type",
+  "role",
+  "name",
+  "email",
+  "contactNo",
+  "address",
 ];
 
 export const userRelationalFields: string[] = ["userId", "serviceId"];

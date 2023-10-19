@@ -31,7 +31,7 @@ const update = z.object({
   }),
 });
 
-export const UserValidation = {
+export const AdminValidation = {
   create,
   update,
 };
