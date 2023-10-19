@@ -6,6 +6,15 @@ const getMyProfileFromDB = async (userId: string) => {
     where: {
       id: userId,
     },
+    include: {
+      user: {
+        include: {
+          service: true,
+          user: true
+        }
+      },
+      reviews: true,
+    },
   });
   return result;
 };

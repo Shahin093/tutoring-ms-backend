@@ -68,7 +68,7 @@ model Booking {
   category        ServiceCategory
   schedule        ServiceSchedule
   status          BookingStatus  @default(PENDING)
-  student_type    StudentType    @default(NORMAL_STUDENT)
+  student_type    StudentType?    @default(NORMAL_STUDENT)
 
 
   createdAt       DateTime             @default(now())
@@ -98,6 +98,53 @@ model Review {
   @@map("reviews")
 }
 
+model Feedback {
+  id String @id @default(uuid())
+
+ title            String 
+
+
+ suggestion      String       
+
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@map("feedbacks")
+}
+
+
+model Content {
+  id String @id @default(uuid())
+
+ title            String 
+
+
+ description      String       
+
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@map("contents")
+}
+
+
+model Admin {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String @default("shahin123")
+  role  String @default("admin")
+  contactNo String
+  address String
+  profileImg String
+
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+
+  @@map("admins")
+}
 
 
 

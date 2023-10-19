@@ -235,6 +235,10 @@ const getByIdFromDB = async (id: string): Promise<Service | null> => {
 
   try {
     const result = await prisma.service.findUnique({
+      include: {
+        service: true,
+        reviews: true,
+      },
       where: {
         id,
       },
