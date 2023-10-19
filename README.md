@@ -10,9 +10,9 @@ Pagination, jwtHelpers, CatchAsync, Pick, prisma, sendResponse, Common-Interface
 
 Middlewares : (GlobalErrorHandler, auth, validateRequest )
 
-## Github repo : ()
+## Github repo : (https://github.com/Shahin093/tutoring-ms-backend.git)
 
-## Live link : ()
+## Live link : (https://tutoring-management-system.vercel.app/api/v1)
 
 ## User-Facing Features
 
