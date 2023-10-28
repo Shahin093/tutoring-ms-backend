@@ -45,7 +45,8 @@ const getAllFromDB = async (
 ): Promise<IGenericResponse<User[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
-
+  console.log("searchTerm : ", searchTerm);
+  console.log("filterData : ", filterData);
   const andConditions = [];
 
   if (!!searchTerm) {
@@ -60,7 +61,7 @@ const getAllFromDB = async (
   }
 
   // Now, andConditions may contain a search condition
-  console.log(andConditions);
+  console.log("andConditions", andConditions);
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({

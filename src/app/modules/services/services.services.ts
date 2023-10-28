@@ -26,58 +26,33 @@ const insertIntoDB = async (data: Service): Promise<Service> => {
 //   filters: IServiceFilterRequest,
 //   options: IPaginationOptions
 // ): Promise<IGenericResponse<Service[]>> => {
-//   const { page, limit, skip, sortBy, sortOrder } =
-//     paginationHelpers.calculatePagination(options);
+//   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 //   const { searchTerm, ...filterData } = filters;
-
+//   console.log("searchTerm : ", searchTerm);
+//   console.log("filterData : ", filterData);
 //   const andConditions = [];
 
-//   // if (searchTerm) {
-//   //   andConditions.push({
-//   //     $or: serviceSearchableFields.map((field) => ({
-//   //       [field]: {
-//   //         $regex: searchTerm,
-//   //         $options: "i",
-//   //       },
-//   //     })),
-//   //   });
-//   // }
-
-//   if (searchTerm) {
+//   if (!!searchTerm) {
 //     andConditions.push({
 //       OR: serviceSearchableFields.map((field) => ({
 //         [field]: {
-//           contains: searchTerm, // Use the 'contains' filter
+//           contains: searchTerm,
+//           mode: "insensitive",
 //         },
 //       })),
 //     });
 //   }
 
-//   if (Object.keys(filterData).length) {
-//     andConditions.push({
-//       $and: Object.entries(filterData).map(([field, value]) => ({
-//         [field]: value,
-//       })),
-//     });
-//   }
+//   // Now, andConditions may contain a search condition
+//   console.log("andConditions", andConditions);
 
-//   if (Object.keys(filterData)?.length > 0) {
+//   if (Object.keys(filterData).length > 0) {
 //     andConditions.push({
-//       AND: Object.keys(filterData).map((key) => {
-//         if (serviceRelationalFields.includes(key)) {
-//           return {
-//             [serviceRelationalFieldsMapper[key]]: {
-//               id: (filterData as any)[key],
-//             },
-//           };
-//         } else {
-//           return {
-//             [key]: {
-//               equals: (filterData as any)[key],
-//             },
-//           };
-//         }
-//       }),
+//       AND: Object.keys(filterData).map((key) => ({
+//         [key]: {
+//           equals: (filterData as any)[key],
+//         },
+//       })),
 //     });
 //   }
 
@@ -85,13 +60,14 @@ const insertIntoDB = async (data: Service): Promise<Service> => {
 //     andConditions.length > 0 ? { AND: andConditions } : {};
 
 //   const result = await prisma.service.findMany({
-//     // include: {
-//     //   service: true,
-//     //   reviews: true,
-//     // },
+//     include: {
+//       service: true,
+//       reviews: true,
+//     },
 //     where: whereConditions,
 //     skip,
 //     take: limit,
+
 //     orderBy:
 //       options.sortBy && options.sortOrder
 //         ? { [options.sortBy]: options.sortOrder }
@@ -119,10 +95,11 @@ const getAllFromDB = async (
 ): Promise<IGenericResponse<Service[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
-
+  console.log("searchTerm : ", searchTerm);
+  console.log("filterData : ", filterData);
   const andConditions = [];
 
-  if (searchTerm) {
+  if (!!searchTerm) {
     andConditions.push({
       OR: serviceSearchableFields.map((field) => ({
         [field]: {
@@ -133,23 +110,8 @@ const getAllFromDB = async (
     });
   }
 
-  // if (searchTerm) {
-  //   andConditions.push({
-  //     OR: [
-  //       { serviceName: { contains: searchTerm, mode: "insensitive" } },
-  //       { serviceCode: { contains: searchTerm, mode: "insensitive" } },
-  //       { category: { contains: searchTerm, mode: "insensitive" } },
-  //       { price: { contains: searchTerm, mode: "insensitive" } },
-  //       { schedule: { contains: searchTerm, mode: "insensitive" } },
-  //       { status: { contains: searchTerm, mode: "insensitive" } },
-  //       { location: { contains: searchTerm, mode: "insensitive" } },
-  //       { serviceFeatures: { contains: searchTerm, mode: "insensitive" } },
-  //     ],
-  //   });
-  // }
-
   // Now, andConditions may contain a search condition
-  console.log(andConditions);
+  console.log("andConditions", andConditions);
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
@@ -160,29 +122,6 @@ const getAllFromDB = async (
       })),
     });
   }
-
-  if (Object.keys(filterData)?.length > 0) {
-    andConditions.push({
-      AND: Object.keys(filterData).map((key) => {
-        if (bookingRelationalFields.includes(key)) {
-          return {
-            [bookingRelationalFieldsMapper[key]]: {
-              id: (filterData as any)[key],
-            },
-          };
-        } else {
-          return {
-            [key]: {
-              equals: (filterData as any)[key],
-            },
-          };
-        }
-      }),
-    });
-  }
-
-  // const whereConditions: Prisma.ServiceWhereInput =
-  //   andConditions.length > 0 ? { AND: andConditions } : {};
 
   const whereConditions: any =
     andConditions.length > 0 ? { AND: andConditions } : {};
@@ -195,7 +134,6 @@ const getAllFromDB = async (
     where: whereConditions,
     skip,
     take: limit,
-
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
@@ -213,6 +151,7 @@ const getAllFromDB = async (
       page,
       limit,
     },
+
     data: result,
   };
 };

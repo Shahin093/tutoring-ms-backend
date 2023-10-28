@@ -3,32 +3,23 @@ export const serviceFilterableFields: string[] = [
   "serviceName",
   "serviceCode",
   "category",
-  "price",
   "schedule",
   "status",
   "location",
-  "serviceFeatures",
+  "price",
+  "serviceAuthor",
 ];
 
 export const serviceSearchableFields: string[] = [
-  // "searchTerm",
   "serviceName",
-  "serviceCode",
-  "category",
-  "price",
-  "schedule",
-  "status",
+  // "serviceCode",
+  // "category",
+  // "schedule",
+  // "status",
+  // "price",
   "location",
-  "serviceFeatures",
+  "serviceAuthor",
 ];
 
-export const serviceRelationalFields: string[] = [
-  //   "academicFacultyId",
-  //   "academicDepartmentId",
-  //   "academicSemesterId",
-];
-export const serviceRelationalFieldsMapper: { [key: string]: string } = {
-  //   academicFacultyId: "academicFaculty",
-  //   academicDepartmentId: "academicDepartment",
-  //   academicSemesterId: "academicSemester",
-};
+export const serviceRelationalFields: string[] = [];
+export const serviceRelationalFieldsMapper: { [key: string]: string } = {};
