@@ -27,7 +27,6 @@ exports.ServiceServices = void 0;
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const services_constants_1 = require("./services.constants");
-const bookings_constants_1 = require("../bookings/bookings.constants");
 const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.service.create({
         data,
@@ -38,62 +37,39 @@ const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
 //   filters: IServiceFilterRequest,
 //   options: IPaginationOptions
 // ): Promise<IGenericResponse<Service[]>> => {
-//   const { page, limit, skip, sortBy, sortOrder } =
-//     paginationHelpers.calculatePagination(options);
+//   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 //   const { searchTerm, ...filterData } = filters;
+//   console.log("searchTerm : ", searchTerm);
+//   console.log("filterData : ", filterData);
 //   const andConditions = [];
-//   // if (searchTerm) {
-//   //   andConditions.push({
-//   //     $or: serviceSearchableFields.map((field) => ({
-//   //       [field]: {
-//   //         $regex: searchTerm,
-//   //         $options: "i",
-//   //       },
-//   //     })),
-//   //   });
-//   // }
-//   if (searchTerm) {
+//   if (!!searchTerm) {
 //     andConditions.push({
 //       OR: serviceSearchableFields.map((field) => ({
 //         [field]: {
-//           contains: searchTerm, // Use the 'contains' filter
+//           contains: searchTerm,
+//           mode: "insensitive",
 //         },
 //       })),
 //     });
 //   }
-//   if (Object.keys(filterData).length) {
+//   // Now, andConditions may contain a search condition
+//   console.log("andConditions", andConditions);
+//   if (Object.keys(filterData).length > 0) {
 //     andConditions.push({
-//       $and: Object.entries(filterData).map(([field, value]) => ({
-//         [field]: value,
+//       AND: Object.keys(filterData).map((key) => ({
+//         [key]: {
+//           equals: (filterData as any)[key],
+//         },
 //       })),
-//     });
-//   }
-//   if (Object.keys(filterData)?.length > 0) {
-//     andConditions.push({
-//       AND: Object.keys(filterData).map((key) => {
-//         if (serviceRelationalFields.includes(key)) {
-//           return {
-//             [serviceRelationalFieldsMapper[key]]: {
-//               id: (filterData as any)[key],
-//             },
-//           };
-//         } else {
-//           return {
-//             [key]: {
-//               equals: (filterData as any)[key],
-//             },
-//           };
-//         }
-//       }),
 //     });
 //   }
 //   const whereConditions: any =
 //     andConditions.length > 0 ? { AND: andConditions } : {};
 //   const result = await prisma.service.findMany({
-//     // include: {
-//     //   service: true,
-//     //   reviews: true,
-//     // },
+//     include: {
+//       service: true,
+//       reviews: true,
+//     },
 //     where: whereConditions,
 //     skip,
 //     take: limit,
@@ -117,11 +93,12 @@ const insertIntoDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
 //   };
 // };
 const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const { limit, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
     const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
+    console.log("searchTerm : ", searchTerm);
+    console.log("filterData : ", filterData);
     const andConditions = [];
-    if (searchTerm) {
+    if (!!searchTerm) {
         andConditions.push({
             OR: services_constants_1.serviceSearchableFields.map((field) => ({
                 [field]: {
@@ -131,22 +108,8 @@ const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, fun
             })),
         });
     }
-    // if (searchTerm) {
-    //   andConditions.push({
-    //     OR: [
-    //       { serviceName: { contains: searchTerm, mode: "insensitive" } },
-    //       { serviceCode: { contains: searchTerm, mode: "insensitive" } },
-    //       { category: { contains: searchTerm, mode: "insensitive" } },
-    //       { price: { contains: searchTerm, mode: "insensitive" } },
-    //       { schedule: { contains: searchTerm, mode: "insensitive" } },
-    //       { status: { contains: searchTerm, mode: "insensitive" } },
-    //       { location: { contains: searchTerm, mode: "insensitive" } },
-    //       { serviceFeatures: { contains: searchTerm, mode: "insensitive" } },
-    //     ],
-    //   });
-    // }
     // Now, andConditions may contain a search condition
-    console.log(andConditions);
+    console.log("andConditions", andConditions);
     if (Object.keys(filterData).length > 0) {
         andConditions.push({
             AND: Object.keys(filterData).map((key) => ({
@@ -156,28 +119,6 @@ const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, fun
             })),
         });
     }
-    if (((_a = Object.keys(filterData)) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-        andConditions.push({
-            AND: Object.keys(filterData).map((key) => {
-                if (bookings_constants_1.bookingRelationalFields.includes(key)) {
-                    return {
-                        [bookings_constants_1.bookingRelationalFieldsMapper[key]]: {
-                            id: filterData[key],
-                        },
-                    };
-                }
-                else {
-                    return {
-                        [key]: {
-                            equals: filterData[key],
-                        },
-                    };
-                }
-            }),
-        });
-    }
-    // const whereConditions: Prisma.ServiceWhereInput =
-    //   andConditions.length > 0 ? { AND: andConditions } : {};
     const whereConditions = andConditions.length > 0 ? { AND: andConditions } : {};
     const result = yield prisma_1.default.service.findMany({
         include: {

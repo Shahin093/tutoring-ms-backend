@@ -6,7 +6,7 @@ The Project is divided into three main parts: user-facing features, admin-facing
 
 Most Interesting Part : i have used so many reusable Functionality (
 Pagination, jwtHelpers, CatchAsync, Pick, prisma, sendResponse, Common-Interface, errors,  
-)
+) . i have implemented Payment system using ssl commerce.
 
 Middlewares : (GlobalErrorHandler, auth, validateRequest )
 

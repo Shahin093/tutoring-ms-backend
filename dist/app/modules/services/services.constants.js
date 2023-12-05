@@ -6,30 +6,21 @@ exports.serviceFilterableFields = [
     "serviceName",
     "serviceCode",
     "category",
-    "price",
     "schedule",
     "status",
     "location",
-    "serviceFeatures",
+    "price",
+    "serviceAuthor",
 ];
 exports.serviceSearchableFields = [
-    // "searchTerm",
     "serviceName",
-    "serviceCode",
-    "category",
-    "price",
-    "schedule",
-    "status",
+    // "serviceCode",
+    // "category",
+    // "schedule",
+    // "status",
+    // "price",
     "location",
-    "serviceFeatures",
+    "serviceAuthor",
 ];
-exports.serviceRelationalFields = [
-//   "academicFacultyId",
-//   "academicDepartmentId",
-//   "academicSemesterId",
-];
-exports.serviceRelationalFieldsMapper = {
-//   academicFacultyId: "academicFaculty",
-//   academicDepartmentId: "academicDepartment",
-//   academicSemesterId: "academicSemester",
-};
+exports.serviceRelationalFields = [];
+exports.serviceRelationalFieldsMapper = {};

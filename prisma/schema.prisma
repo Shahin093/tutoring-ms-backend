@@ -25,6 +25,7 @@ model User {
 
   user Booking[] 
   reviews Review[]
+  userPayment UserPayment[]
 
 
   @@map("users")
@@ -50,6 +51,7 @@ model Service {
 
   service Booking[]
   reviews Review[]
+  userPayment UserPayment[]
 
 
   @@map("services")
@@ -146,6 +148,31 @@ model Admin {
   @@map("admins")
 }
 
+model UserPayment {
+  id String @id @default(uuid())
+  amount             Int
+    userId          String
+  user            User?           @relation(fields: [userId], references: [id])
+
+    serviceid       String
+  service         Service?        @relation(fields: [serviceid], references: [id])
+
+  transactionId      String
+   paymentGatewayData Json?
+
+  fullPaymentAmount             Int?                            @default(0)
+  partialPaymentAmount          Int?                            @default(0)
+  totalDueAmount                Int?                            @default(0)
+  totalPaidAmount               Int?                            @default(0)
+  paymentStatus                 PaymentStatus?                  @default(PENDING)
+
+    createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+ @@map("userPayments")
+}
+
+
+
 
 
 enum UserEnrolledServiceStatus {
@@ -178,4 +205,10 @@ enum StudentType {
   SHOOLE
   COLLEGE
   UNIVERCITY
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL_PAID
+  FULL_PAID
 }

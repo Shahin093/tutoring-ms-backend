@@ -54,6 +54,8 @@ const insertInToDB = (data) => __awaiter(void 0, void 0, void 0, function* () {
 const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, skip } = paginationHelper_1.paginationHelpers.calculatePagination(options);
     const { searchTerm } = filters, filterData = __rest(filters, ["searchTerm"]);
+    console.log("searchTerm : ", searchTerm);
+    console.log("filterData : ", filterData);
     const andConditions = [];
     if (!!searchTerm) {
         andConditions.push({
@@ -66,7 +68,7 @@ const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     // Now, andConditions may contain a search condition
-    console.log(andConditions);
+    console.log("andConditions", andConditions);
     if (Object.keys(filterData).length > 0) {
         andConditions.push({
             AND: Object.keys(filterData).map((key) => ({
